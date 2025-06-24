@@ -11,6 +11,7 @@
     <modules>
         <module>json-helper</module>
         <module>base-helper</module>
+        <module>sql-helper</module>
     </modules>
 
     <properties>
