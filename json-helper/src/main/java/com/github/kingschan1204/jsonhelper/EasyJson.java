@@ -68,6 +68,11 @@ public class EasyJson implements JsonHelper {
   }
 
   @Override
+  public Map<String, Object> toMap() {
+    return toJavaObj(Map.class);
+  }
+
+  @Override
   @SneakyThrows
   public <T> List<T> toListObj(Class<T> clazz) {
     TypeFactory typeFactory = objectMapper.getTypeFactory();

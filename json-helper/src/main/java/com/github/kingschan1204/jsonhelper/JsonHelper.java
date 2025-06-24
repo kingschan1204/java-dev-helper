@@ -12,109 +12,111 @@ import java.util.function.Consumer;
  */
 public interface JsonHelper {
 
-  static JsonHelper of(Object object) {
-    return EasyJson.of(object);
-  }
+    static JsonHelper of(Object object) {
+        return EasyJson.of(object);
+    }
 
-  /**
-   * 转成java对象
-   *
-   * @param clazz 类型
-   * @return
-   * @param <T>
-   */
-  <T> T toJavaObj(Class<T> clazz);
+    /**
+     * 转成java对象
+     *
+     * @param clazz 类型
+     * @param <T>
+     * @return
+     */
+    <T> T toJavaObj(Class<T> clazz);
 
-  /**
-   * 转成集合java 对象
-   *
-   * @param clazz 类型
-   * @return
-   * @param <T>
-   */
-  <T> List<T> toListObj(Class<T> clazz);
+    Map<String, Object> toMap();
 
-  List<Map<String, Object>> toListMap();
+    /**
+     * 转成集合java 对象
+     *
+     * @param clazz 类型
+     * @param <T>
+     * @return
+     */
+    <T> List<T> toListObj(Class<T> clazz);
 
-  Iterator<JsonNode> iterator();
+    List<Map<String, Object>> toListMap();
 
-  /**
-   * 根据表达式返回一个新的对象
-   *
-   * @param expression
-   * @return
-   */
-  EasyJson op(String expression);
+    Iterator<JsonNode> iterator();
 
-  /**
-   * 增强op方法，用于基本单值类型的转换返回
-   *
-   * @return
-   */
-  <T> T value();
+    /**
+     * 根据表达式返回一个新的对象
+     *
+     * @param expression
+     * @return
+     */
+    EasyJson op(String expression);
 
-  /**
-   * 根据表达式获取值
-   *
-   * @param expression 表达式
-   * @param clazz 类型
-   * @param <T>
-   * @return
-   */
-  @Deprecated
-  <T> T get(String expression, Class<T> clazz);
+    /**
+     * 增强op方法，用于基本单值类型的转换返回
+     *
+     * @return
+     */
+    <T> T value();
 
-  /**
-   * 根据表达式获取值
-   *
-   * @param expression 表达式
-   * @return
-   */
-  JsonNode get(String expression);
+    /**
+     * 根据表达式获取值
+     *
+     * @param expression 表达式
+     * @param clazz      类型
+     * @param <T>
+     * @return
+     */
+    @Deprecated
+    <T> T get(String expression, Class<T> clazz);
 
-  JsonNode root();
+    /**
+     * 根据表达式获取值
+     *
+     * @param expression 表达式
+     * @return
+     */
+    JsonNode get(String expression);
 
-  /**
-   * 在表达式指定位置设置值
-   *
-   * @param exp
-   * @param key
-   * @param value
-   * @return
-   */
-  JsonHelper put(String exp, String key, Object value);
+    JsonNode root();
 
-  /**
-   * 设置值
-   *
-   * @param key
-   * @param value
-   * @return
-   */
-  JsonHelper put(String key, Object value);
+    /**
+     * 在表达式指定位置设置值
+     *
+     * @param exp
+     * @param key
+     * @param value
+     * @return
+     */
+    JsonHelper put(String exp, String key, Object value);
 
-  /**
-   * 转成10位时间戳
-   *
-   * @param key
-   * @return
-   */
-  JsonHelper toTimeStamp(String key);
+    /**
+     * 设置值
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    JsonHelper put(String key, Object value);
 
-  /**
-   * 转成yyyyMMdd格式
-   *
-   * @param key key
-   * @return
-   */
-  JsonHelper toIntDate(String key);
+    /**
+     * 转成10位时间戳
+     *
+     * @param key
+     * @return
+     */
+    JsonHelper toTimeStamp(String key);
 
-  /**
-   * 循环
-   *
-   * @param consumer
-   */
-  void forEach(Consumer<? super JsonNode> consumer);
+    /**
+     * 转成yyyyMMdd格式
+     *
+     * @param key key
+     * @return
+     */
+    JsonHelper toIntDate(String key);
 
-  String pretty();
+    /**
+     * 循环
+     *
+     * @param consumer
+     */
+    void forEach(Consumer<? super JsonNode> consumer);
+
+    String pretty();
 }
