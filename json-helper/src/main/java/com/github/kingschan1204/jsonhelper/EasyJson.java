@@ -104,7 +104,7 @@ public class EasyJson implements JsonHelper {
 
   @Override
   public <T> T value() {
-    Class type = getType();
+   /* Class type = getType();
     if (!root.isValueNode()) {
       throw new IllegalArgumentException("当前节点不是单值节点:" + root.getNodeType());
     }
@@ -129,7 +129,21 @@ public class EasyJson implements JsonHelper {
     if (root instanceof BooleanNode) {
       return (T) type.cast(root.asBoolean());
     }
-    throw new IllegalArgumentException("不支持的类型:" + root.getNodeType());
+
+    throw new IllegalArgumentException("不支持的类型:" + root.getNodeType());*/
+    Class type = getType();
+    if (!root.isValueNode()) {
+      throw new IllegalArgumentException("当前节点不是单值节点:" + root.getNodeType());
+    }
+    return switch (root) {
+      case TextNode textNode -> (T) textNode.asText();
+      case IntNode intNode -> (T) type.cast(intNode.asInt());
+      case LongNode longNode -> (T) type.cast(longNode.asLong());
+      case DoubleNode doubleNode -> (T) type.cast(doubleNode.asDouble());
+      case ShortNode shortNode -> (T) type.cast(shortNode.shortValue());
+      case BooleanNode booleanNode -> (T) type.cast(booleanNode.asBoolean());
+      default -> throw new IllegalArgumentException("未知节点类型: " + root.getClass());
+    };
   }
 
   private Class<?> getType() {
