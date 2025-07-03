@@ -61,7 +61,6 @@ public class JsonTest {
 
     @Test
     public void arrayJsonTransform() {
-        JsonHelper json = JsonHelper.of(jsonText);
         String text = json.arrayJsonTransform("column", "item", val -> val.toString().matches("timestamp|pb|pe")
         , Map.of("symbol","symbol","test","bool")
         ).pretty();
@@ -70,7 +69,6 @@ public class JsonTest {
 
     @Test
     public void transformation() {
-        JsonHelper json = JsonHelper.of(jsonText);
         List<String> heads = json.op("column").toListObj(String.class);
         log.info("{}", heads);
 
