@@ -222,10 +222,10 @@ public class EasyJson implements JsonHelper {
 
   private Object getValByExpression(Object object, String expression) {
     // jsonObject
-    if (object instanceof ObjectNode) {
-      return ((ObjectNode) object).get(expression);
-    }else if(expression.matches("^\\[.*\\]$")){
+    if(expression.matches("^\\[.*\\]$")){
       return new SquareBracketsImpl().eval((JsonNode) object,expression);
+    }else if (object instanceof ObjectNode) {
+      return ((ObjectNode) object).get(expression);
     }
     else if (object instanceof ArrayNode js) {
       System.err.println("还未实现！");

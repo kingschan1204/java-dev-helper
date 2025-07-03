@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.kingschan1204.jsonhelper.el.JsonExpression;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.github.kingschan1204.jsonhelper.EasyJson.objectMapper;
@@ -67,8 +65,15 @@ public class SquareBracketsImpl implements JsonExpression {
             }
             return result;
         }
+        //带括号的key情况
+        for (int i = 0; i < arrayNode.size(); i++) {
+            JsonNode node = arrayNode.get(i);
+            JsonNode newNode = (JsonNode) objectEval(node, el);
+            arrayNode.set(i, newNode);
+        }
+        return arrayNode;
 
-        return null;
+
     }
 
     Object objectEval(JsonNode jsonNode, String expression) {
@@ -76,22 +81,25 @@ public class SquareBracketsImpl implements JsonExpression {
         String el = expression.replaceAll("\\[|\\]", "");
         Set<String> columns = Arrays.stream(el.split(",")).map(s -> s.replace("^", "").trim()).collect(Collectors.toSet());
         Iterator<String> fieldNames = jsonNode.fieldNames();
+        ObjectNode newNode = objectMapper.createObjectNode();
         if (el.startsWith("^")) {
             while (fieldNames.hasNext()) {
                 String key = fieldNames.next();
-                if (columns.contains(key)) {
-                    objectNode.remove(key);
+                //不在排除的key中就添加
+                if (!columns.contains(key)) {
+                    newNode.put(key, objectNode.get(key));
                 }
             }
-            return objectNode;
+            return newNode;
         } else if (el.matches("[a-zA-Z0-9_,]+")) {
             while (fieldNames.hasNext()) {
                 String key = fieldNames.next();
-                if (!columns.contains(key)) {
-                    objectNode.remove(key);
+                //在包含的key中就添加
+                if (columns.contains(key)) {
+                    newNode.put(key, objectNode.get(key));
                 }
             }
-            return objectNode;
+            return newNode;
         }
         return null;
     }
