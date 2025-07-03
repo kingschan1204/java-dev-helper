@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author kings.chan 2024-6-27
@@ -141,7 +142,7 @@ public class EasyJson implements JsonHelper {
       case LongNode longNode -> (T) type.cast(longNode.asLong());
       case DoubleNode doubleNode -> (T) type.cast(doubleNode.asDouble());
       case ShortNode shortNode -> (T) type.cast(shortNode.shortValue());
-      case BooleanNode booleanNode -> (T) type.cast(booleanNode.asBoolean());
+      case BooleanNode booleanNode -> (T) type.cast(booleanNode.booleanValue());
       default -> throw new IllegalArgumentException("未知节点类型: " + root.getClass());
     };
   }
@@ -309,6 +310,36 @@ public class EasyJson implements JsonHelper {
     return updateDateValue(key, val -> Long.valueOf(DateHelper.of(val).dateInt()));
   }
 
+  @Override
+  public JsonHelper arrayJsonTransform(String columnKey, String arrayKey, Predicate<String> predicate,Map<String,String> appendPut) {
+    List<String> heads = op(columnKey).toListObj(String.class);
+    List<List> values = op(arrayKey).toListObj(List.class);
+    ArrayNode arrayNode = objectMapper.createArrayNode();
+    ObjectNode row;
+    for (int i = 0; i < values.size(); i++) {
+      row = objectMapper.createObjectNode();
+      for (int j = 0; j < heads.size(); j++) {
+        String key = heads.get(j);
+        Object value = values.get(i).get(j);
+        // 过滤不需要的字段
+        if (null!= predicate && !predicate.test(key)) {
+          continue;
+        }
+        _put(row, key, value);
+      }
+      // 额外添加的put 从原json中提取数据
+      if (null!=appendPut) {
+        for (Map.Entry<String,String> entry:appendPut.entrySet()) {
+          Object value = get(entry.getValue(),Object.class);
+          _put(row, entry.getKey(), value);
+        }
+      }
+      arrayNode.add(row);
+    }
+    this.root = arrayNode;
+    return this;
+  }
+
   private JsonHelper updateDateValue(String key, Function<String, Long> dateConverter) {
     if (root.isObject()) {
       ObjectNode objectNode = (ObjectNode) root;
@@ -343,6 +374,10 @@ public class EasyJson implements JsonHelper {
   private EasyJson _put(JsonNode node, String key, Object value) {
     Assert.isTrue(node.isObject(), "不是jsonObject无法添加元素！");
     ObjectNode objectNode = (ObjectNode) node;
+    if (null == value) {
+      objectNode.putNull(key);
+      return this;
+    }
     // 添加新的元素
     if (value instanceof JsonNode) {
       objectNode.putPOJO(key, value);

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author kings.chan 2024-6-26
@@ -110,6 +111,17 @@ public interface JsonHelper {
      * @return
      */
     JsonHelper toIntDate(String key);
+
+    /**
+     * json数组转换
+     *
+     * @param columnKey 列key
+     * @param arrayKey  数组值key
+     * @param predicate 列key过滤器
+     * @param appendPut 额外添加的put 从原json中提取数据   key 追加时使用的属性 value 原json属性key
+     * @return
+     */
+    JsonHelper arrayJsonTransform(String columnKey, String arrayKey, Predicate<String> predicate,Map<String,String> appendPut);
 
     /**
      * 循环
