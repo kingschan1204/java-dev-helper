@@ -66,9 +66,10 @@ public class SquareBracketsImpl implements JsonExpression {
             return result;
         }
         //带括号的key情况
+        JsonNode newNode;
         for (int i = 0; i < arrayNode.size(); i++) {
             JsonNode node = arrayNode.get(i);
-            JsonNode newNode = (JsonNode) objectEval(node, el);
+            newNode = (JsonNode) objectEval(node, el);
             arrayNode.set(i, newNode);
         }
         return arrayNode;
