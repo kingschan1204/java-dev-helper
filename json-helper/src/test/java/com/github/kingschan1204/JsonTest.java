@@ -61,10 +61,18 @@ public class JsonTest {
 
     @Test
     public void arrayJsonTransform() {
-        String text = json.arrayJsonTransform("column", "item", val -> val.toString().matches("timestamp|pb|pe")
+        String text = json.transformArrayJson("column", "item", val -> val.toString().matches("timestamp|pb|pe")
         , Map.of("symbol","symbol","test","bool")
         ).pretty();
         System.out.println(text);
+    }
+
+    @Test
+    public void arraySquareBracketsTest(){
+        json.op("column.[0]").prettyPrint();
+        json.op("column.[0:3]").prettyPrint();
+        json.op("column.[-1]").prettyPrint();
+        json.op("column.[5:]").prettyPrint();
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.*;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.kingschan1204.basehelper.datetime.DateHelper;
 import com.github.kingschan1204.basehelper.validation.Assert;
+import com.github.kingschan1204.jsonhelper.el.impl.SquareBracketsImpl;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Type;
@@ -23,7 +24,7 @@ import java.util.function.Predicate;
  */
 public class EasyJson implements JsonHelper {
 
-  private static final ObjectMapper objectMapper;
+  public static final ObjectMapper objectMapper;
   JsonNode root;
 
   static {
@@ -223,9 +224,13 @@ public class EasyJson implements JsonHelper {
     // jsonObject
     if (object instanceof ObjectNode) {
       return ((ObjectNode) object).get(expression);
-    } else if (object instanceof ArrayNode js) {
+    }else if(expression.matches("^\\[.*\\]$")){
+      return new SquareBracketsImpl().eval((JsonNode) object,expression);
+    }
+    else if (object instanceof ArrayNode js) {
+      System.err.println("还未实现！");
       // jsonArray模式
-      // 如果是数字直接取下标，保留关键字：$first第一条 $last最后一条
+     /* // 如果是数字直接取下标，保留关键字：0 第一条 -1最后一条
       if (expression.matches("\\d+")) {
         return js.get(Integer.parseInt(expression));
       } else if (expression.matches("\\$first")) {
@@ -253,7 +258,7 @@ public class EasyJson implements JsonHelper {
           result.add(json);
         }
         return result;
-      }
+      }*/
     }
     return null;
   }
@@ -311,7 +316,7 @@ public class EasyJson implements JsonHelper {
   }
 
   @Override
-  public JsonHelper arrayJsonTransform(String columnKey, String arrayKey, Predicate<String> predicate,Map<String,String> appendPut) {
+  public JsonHelper transformArrayJson(String columnKey, String arrayKey, Predicate<String> predicate, Map<String,String> appendPut) {
     List<String> heads = op(columnKey).toListObj(String.class);
     List<List> values = op(arrayKey).toListObj(List.class);
     ArrayNode arrayNode = objectMapper.createArrayNode();
@@ -369,6 +374,11 @@ public class EasyJson implements JsonHelper {
   @Override
   public String pretty() {
     return root.toPrettyString();
+  }
+
+  @Override
+  public void prettyPrint() {
+    System.out.println(pretty());
   }
 
   private EasyJson _put(JsonNode node, String key, Object value) {

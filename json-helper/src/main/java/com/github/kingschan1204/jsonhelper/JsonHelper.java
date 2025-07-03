@@ -121,7 +121,7 @@ public interface JsonHelper {
      * @param appendPut 额外添加的put 从原json中提取数据   key 追加时使用的属性 value 原json属性key
      * @return
      */
-    JsonHelper arrayJsonTransform(String columnKey, String arrayKey, Predicate<String> predicate,Map<String,String> appendPut);
+    JsonHelper transformArrayJson(String columnKey, String arrayKey, Predicate<String> predicate, Map<String,String> appendPut);
 
     /**
      * 循环
@@ -131,4 +131,6 @@ public interface JsonHelper {
     void forEach(Consumer<? super JsonNode> consumer);
 
     String pretty();
+
+    void prettyPrint();
 }
