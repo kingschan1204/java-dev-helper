@@ -133,4 +133,10 @@ public interface JsonHelper {
     String pretty();
 
     void prettyPrint();
+
+    /**
+     * 获取数值类型数组的长度
+     * @return
+     */
+    int length();
 }

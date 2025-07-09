@@ -381,6 +381,13 @@ public class EasyJson implements JsonHelper {
     System.out.println(pretty());
   }
 
+  @Override
+  public int length() {
+    Assert.isTrue(root.isArray(), "不是jsonArray无法获取长度！");
+    ArrayNode arrayNode = (ArrayNode) root;
+    return arrayNode.size();
+  }
+
   private EasyJson _put(JsonNode node, String key, Object value) {
     Assert.isTrue(node.isObject(), "不是jsonObject无法添加元素！");
     ObjectNode objectNode = (ObjectNode) node;
