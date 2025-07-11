@@ -420,15 +420,14 @@ public class EasyJson implements JsonHelper {
     return this;
   }
 
-  public EasyJson put(String key, List<?> list) {
+  @Override
+  public JsonHelper put(String key, List<?> list) {
     Assert.isTrue(root.isObject(), "不是jsonObject无法添加元素！");
     ObjectNode objectNode = (ObjectNode) root;
 
-    ArrayNode nodes = objectMapper.createArrayNode();
-    list.forEach(
-        r -> {
-          nodes.add((JsonNode) r);
-        });
+//    ArrayNode nodes = objectMapper.createArrayNode();
+//    nodes.addAll((ArrayNode) list);
+    objectNode.putPOJO(key, list);
     return this;
   }
 

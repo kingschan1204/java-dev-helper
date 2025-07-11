@@ -96,6 +96,8 @@ public interface JsonHelper {
      */
     JsonHelper put(String key, Object value);
 
+    JsonHelper put(String key, List<?> list);
+
     /**
      * 转成10位时间戳
      *
